@@ -49,15 +49,10 @@ public class LoginController {
 		if (selectedUserInfo == null) {
 			model.addAttribute("errorMessage", "ログインに失敗しました。");
 			return "login";
-
+// 本の情報を取得して画面側に渡す
 		} else {
 			model.addAttribute("bookList", booksService.getBookList());
 			return "home";
 		}
-
-		// 本の情報を取得して画面側に渡す
-		// model.addAttribute("bookList", booksService.getBookList());
-		// return "home";
-
 	}
 }
