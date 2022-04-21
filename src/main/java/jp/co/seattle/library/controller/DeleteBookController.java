@@ -42,7 +42,6 @@ public class DeleteBookController {
         
         booksService.deleteBook(bookId);
 
-        model.addAttribute("bookDetailsInfo.bookId", "削除");
         model.addAttribute("bookList", booksService.getBookList());
 
         return "home";
