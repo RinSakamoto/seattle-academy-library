@@ -41,9 +41,9 @@
                 </div>
                 <div class="content_right">
                     <c:if test="${!empty errorMessages}">
-                        <c:forEach var="error" items="${errorMessages}">
-                            <div class="error">${error}</div>
-                        </c:forEach>
+                        <div class="error">
+                            <c:forEach var="error" items="${errorMessages}">${error}</c:forEach>
+                        </div>
                     </c:if>
                     <div>
                         <span>書籍名</span><span class="care care2">必須</span>
