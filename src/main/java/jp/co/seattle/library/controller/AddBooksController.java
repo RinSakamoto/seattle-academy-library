@@ -68,7 +68,7 @@ public class AddBooksController {
 
 		// クライアントのファイルシステムにある元のファイル名を設定する
 		String thumbnail = file.getOriginalFilename();
-
+	
 		if (!file.isEmpty()) {
 			try {
 				// サムネイル画像をアップロード
@@ -91,17 +91,17 @@ public class AddBooksController {
 		// TODO バリデーションチェック
 		List<String> errorMessages = new ArrayList<String>();
 
-		if ((title.isEmpty()) || (author.isEmpty()) || (publisher.isEmpty()) || (publishDate.isEmpty())) {
+		if (title.isEmpty() || author.isEmpty() || publisher.isEmpty() || publishDate.isEmpty()) {
 			errorMessages.add("必須項目を入力してください<br>");
 		}
 
-		if ((!(publishDate.length() == 8)) || (!(publishDate.matches("^[0-9]*$")))) {
+		if (!(publishDate.length() == 8 || !publishDate.matches("^[0-9]*$"))){
 			errorMessages.add("<br>出版日は半角数字のYYYYMMDD形式で入力してください<br>");
 		}
 
-		Boolean isbn1 = !isbn.matches("^\\d{10}$") && !isbn.matches("^\\d{13}$");
+		Boolean digitNumberCheck = !isbn.matches("^\\d{10}$") && !isbn.matches("^\\d{13}$");
 
-		if (!isbn.isEmpty() && isbn1) {
+		if (!isbn.isEmpty() && digitNumberCheck) {
 			errorMessages.add("<br>ISBNの桁数または半角数字が正しくありません");
 		}
 
@@ -113,8 +113,8 @@ public class AddBooksController {
 			model.addAttribute("resultMessage", "登録完了");
 
 			// TODO 登録した書籍の詳細情報を表示するように実装
-			model.addAttribute("bookDetailsInfo", bookInfo);
-
+			model.addAttribute("bookDetailsInfo", booksService.getBookInfo());
+			
 			// 詳細画面に遷移する
 			return "details";
 

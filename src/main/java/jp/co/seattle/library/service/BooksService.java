@@ -54,6 +54,16 @@ public class BooksService {
 
 		return bookDetailsInfo;
 	}
+	
+	public BookDetailsInfo getBookInfo() {
+
+		// JSPに渡すデータを設定する
+		String sql = "SELECT * FROM books where id = (SELECT max(id) FROM books)" ;
+
+		BookDetailsInfo bookDetailsInfo = jdbcTemplate.queryForObject(sql, new BookDetailsInfoRowMapper());
+
+		return bookDetailsInfo;
+	}
 
 	/**
 	 * 書籍を登録する
@@ -69,6 +79,11 @@ public class BooksService {
 
 		jdbcTemplate.update(sql);
 	}
+	
+	/**
+	 * 書籍を削除する
+	 * @param bookId 書籍ID
+	 */
 
 	public void deleteBook(int bookId) {
 
