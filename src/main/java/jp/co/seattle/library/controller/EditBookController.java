@@ -34,11 +34,10 @@ public class EditBookController {
 
 	@RequestMapping(value = "/editBook", method = RequestMethod.POST, produces = "text/plain;charset=utf-8") // value＝actionで指定したパラメータ
 	// RequestParamで入力された情報を取得
-	public String editBook(Locale locale, @RequestParam("title") String title, @RequestParam("author") String author,
-			@RequestParam("publisher") String publisher, @RequestParam("publishDate") String publishDate,
-			@RequestParam("isbn") String isbn, @RequestParam("explanation") String explanation,
-			@RequestParam("thumbnail") MultipartFile file, Model model) {
+	public String editBook(Locale locale, @RequestParam("bookId") Integer bookId, Model model) {
 		logger.info("Welcome editBooks.java! The client locale is {}.", locale);
+
+		model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
 
 		return "editBook";
 	}
@@ -56,14 +55,18 @@ public class EditBookController {
 	 */
 	@Transactional
 	@RequestMapping(value = "/updateBook", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
-	public String updateBook(Locale locale, @RequestParam("title") String title, @RequestParam("author") String author,
-			@RequestParam("publisher") String publisher, @RequestParam("publishDate") String publishDate,
-			@RequestParam("isbn") String isbn, @RequestParam("explanation") String explanation,
-			@RequestParam("thumbnail") MultipartFile file, Model model) {
-		logger.info("Welcome updateBooks.java! The client locale is {}.", locale);
+	public String updateBook(Locale locale, @RequestParam("bookId") Integer bookId, @RequestParam("title") String title,
+			@RequestParam("author") String author, @RequestParam("publisher") String publisher,
+			@RequestParam("publishDate") String publishDate, @RequestParam("isbn") String isbn,
+			@RequestParam("explanation") String explanation, @RequestParam("thumbnail") MultipartFile file,
+			Model model) {
+		logger.info("Welcome updateBook.java! The client locale is {}.", locale);
+
+		//model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
 
 		// パラメータで受け取った書籍情報をDtoに格納する。
 		BookDetailsInfo bookInfo = new BookDetailsInfo();
+		bookInfo.setBookId(bookId);
 		bookInfo.setTitle(title);
 		bookInfo.setAuthor(author);
 		bookInfo.setPublisher(publisher);
@@ -91,42 +94,42 @@ public class EditBookController {
 				model.addAttribute("bookDetailsInfo", bookInfo);
 				return "editBook";
 			}
+		}
 
-			// TODO バリデーションチェック
-			List<String> errorMessages = new ArrayList<String>();
+		// TODO バリデーションチェック
+		List<String> errorMessages = new ArrayList<String>();
 
-			if ((title.isEmpty()) || (author.isEmpty()) || (publisher.isEmpty()) || (publishDate.isEmpty())) {
-				errorMessages.add("必須項目を入力してください<br>");
-			}
+		if ((title.isEmpty()) || (author.isEmpty()) || (publisher.isEmpty()) || (publishDate.isEmpty())) {
+			errorMessages.add("必須項目を入力してください<br>");
+		}
 
-			if ((!(publishDate.length() == 8)) || (!(publishDate.matches("^[0-9]*$")))) {
-				errorMessages.add("<br>出版日は半角数字のYYYYMMDD形式で入力してください<br>");
-			}
+		if ((!(publishDate.length() == 8)) || (!(publishDate.matches("^[0-9]*$")))) {
+			errorMessages.add("<br>出版日は半角数字のYYYYMMDD形式で入力してください<br>");
+		}
 
-			Boolean isbn1 = !isbn.matches("^\\d{10}$") && !isbn.matches("^\\d{13}$");
+		Boolean isbn1 = !isbn.matches("^\\d{10}$") && !isbn.matches("^\\d{13}$");
 
-			if (!isbn.isEmpty() && isbn1) {
-				errorMessages.add("<br>ISBNの桁数または半角数字が正しくありません");
-			}
+		if (!isbn.isEmpty() && isbn1) {
+			errorMessages.add("<br>ISBNの桁数または半角数字が正しくありません");
+		}
 
-			if (errorMessages == null || errorMessages.size() == 0) {
+		if (errorMessages == null || errorMessages.size() == 0) {
 
-				// 書籍情報を新規登録する
-				booksService.registBook(bookInfo);
+			// 書籍情報を更新する
+			booksService.updateBook(bookInfo,bookId);
 
-				model.addAttribute("resultMessage", "登録完了");
+			model.addAttribute("resultMessage", "更新完了");
 
-				// TODO 登録した書籍の詳細情報を表示するように実装
-				model.addAttribute("bookDetailsInfo", bookInfo);
+			// TODO 更新した書籍の詳細情報を表示するように実装
+			model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
 
-				// 詳細画面に遷移する
-				return "details";
+			// 詳細画面に遷移する
+			return "details";
 
-			} else {
-				model.addAttribute("errorMessages", errorMessages);
-				model.addAttribute("bookInfo", bookInfo);
-				return "addBook";
-			}
-	}return "";
-  }
+		} else {
+			model.addAttribute("errorMessages", errorMessages);
+			model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
+			return "editBook";
+		}
+	}
 }
