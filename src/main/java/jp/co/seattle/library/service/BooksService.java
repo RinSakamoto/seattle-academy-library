@@ -55,6 +55,12 @@ public class BooksService {
 		return bookDetailsInfo;
 	}
 	
+	/**
+	 * 書籍IDに紐づく書籍詳細情報を取得する
+	 * @param bookId 書籍ID
+	 * @return 書籍情報
+	*/
+	
 	public BookDetailsInfo getBookInfo() {
 
 		// JSPに渡すデータを設定する
