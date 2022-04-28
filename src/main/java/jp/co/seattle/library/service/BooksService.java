@@ -56,15 +56,12 @@ public class BooksService {
 	}
 	
 	/**
-	 * 書籍IDに紐づく書籍詳細情報を取得する
-	 * @param bookId 書籍ID
 	 * @return 書籍情報
 	*/
-	
 	public BookDetailsInfo getBookInfo() {
 
 		// JSPに渡すデータを設定する
-		String sql = "SELECT * FROM books where id = (SELECT max(id) FROM books)" ;
+		String sql = "SELECT * FROM books where id = (SELECT max(id) FROM books)";
 
 		BookDetailsInfo bookDetailsInfo = jdbcTemplate.queryForObject(sql, new BookDetailsInfoRowMapper());
 
@@ -85,15 +82,31 @@ public class BooksService {
 
 		jdbcTemplate.update(sql);
 	}
-	
+
 	/**
 	 * 書籍を削除する
+	 * 
 	 * @param bookId 書籍ID
 	 */
 
 	public void deleteBook(int bookId) {
 
 		String sql = "DELETE FROM books WHERE id = " + bookId;
+
+		jdbcTemplate.update(sql);
+	}
+
+	/**
+	 * 書籍を更新する
+	 * @param bookId 書籍ID
+	 */
+
+	public void updateBook(BookDetailsInfo bookInfo) {
+
+		String sql = "UPDATE books SET (title, author,publisher,publish_date,isbn,explanation,thumbnail_name,thumbnail_url,upd_date) = ('"
+				+ bookInfo.getTitle() + "','" + bookInfo.getAuthor() + "','" + bookInfo.getPublisher() + "','"
+				+ bookInfo.getPublishDate() + "','" + bookInfo.getIsbn() + "','" + bookInfo.getExplanation() + "','"
+				+ bookInfo.getThumbnailName() + "','" + bookInfo.getThumbnailUrl() + "'," + "now()) WHERE id = ";
 
 		jdbcTemplate.update(sql);
 	}
