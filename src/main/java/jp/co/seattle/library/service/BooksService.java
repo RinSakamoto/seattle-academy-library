@@ -54,7 +54,10 @@ public class BooksService {
 
 		return bookDetailsInfo;
 	}
-
+	
+	/**
+	 * @return 書籍情報
+	*/
 	public BookDetailsInfo getBookInfo() {
 
 		// JSPに渡すデータを設定する
@@ -98,12 +101,12 @@ public class BooksService {
 	 * @param bookId 書籍ID
 	 */
 
-	public void updateBook(BookDetailsInfo bookInfo, int bookId) {
+	public void updateBook(BookDetailsInfo bookInfo) {
 
 		String sql = "UPDATE books SET (title, author,publisher,publish_date,isbn,explanation,thumbnail_name,thumbnail_url,upd_date) = ('"
 				+ bookInfo.getTitle() + "','" + bookInfo.getAuthor() + "','" + bookInfo.getPublisher() + "','"
 				+ bookInfo.getPublishDate() + "','" + bookInfo.getIsbn() + "','" + bookInfo.getExplanation() + "','"
-				+ bookInfo.getThumbnailName() + "','" + bookInfo.getThumbnailUrl() + "'," + "now()) WHERE id = " + bookId;
+				+ bookInfo.getThumbnailName() + "','" + bookInfo.getThumbnailUrl() + "'," + "now()) WHERE id = ";
 
 		jdbcTemplate.update(sql);
 	}

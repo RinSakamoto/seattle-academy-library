@@ -31,6 +31,14 @@ public class EditBookController {
 
 	@Autowired
 	private ThumbnailService thumbnailService;
+	
+	/**
+	* 書籍情報を編集する
+	*
+	* @param bookId 書籍ID
+	* @param model モデル
+	* @return 遷移先画面
+	*/
 
 	@RequestMapping(value = "/editBook", method = RequestMethod.POST, produces = "text/plain;charset=utf-8") // value＝actionで指定したパラメータ
 	// RequestParamで入力された情報を取得
@@ -46,6 +54,7 @@ public class EditBookController {
 	 * 書籍情報を更新する
 	 * 
 	 * @param locale    ロケール情報
+	 * @param bookId    書籍ID
 	 * @param title     書籍名
 	 * @param author    著者名
 	 * @param publisher 出版社
@@ -61,8 +70,6 @@ public class EditBookController {
 			@RequestParam("explanation") String explanation, @RequestParam("thumbnail") MultipartFile file,
 			Model model) {
 		logger.info("Welcome updateBook.java! The client locale is {}.", locale);
-
-		//model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
 
 		// パラメータで受け取った書籍情報をDtoに格納する。
 		BookDetailsInfo bookInfo = new BookDetailsInfo();
@@ -99,11 +106,11 @@ public class EditBookController {
 		// TODO バリデーションチェック
 		List<String> errorMessages = new ArrayList<String>();
 
-		if ((title.isEmpty()) || (author.isEmpty()) || (publisher.isEmpty()) || (publishDate.isEmpty())) {
+		if (title.isEmpty() || author.isEmpty() || publisher.isEmpty() || publishDate.isEmpty()) {
 			errorMessages.add("必須項目を入力してください<br>");
 		}
 
-		if ((!(publishDate.length() == 8)) || (!(publishDate.matches("^[0-9]*$")))) {
+		if (!(publishDate.length() == 8 || !publishDate.matches("^[0-9]*$"))) {
 			errorMessages.add("<br>出版日は半角数字のYYYYMMDD形式で入力してください<br>");
 		}
 
@@ -116,7 +123,7 @@ public class EditBookController {
 		if (errorMessages == null || errorMessages.size() == 0) {
 
 			// 書籍情報を更新する
-			booksService.updateBook(bookInfo,bookId);
+			booksService.updateBook(bookInfo);
 
 			model.addAttribute("resultMessage", "更新完了");
 
@@ -128,7 +135,7 @@ public class EditBookController {
 
 		} else {
 			model.addAttribute("errorMessages", errorMessages);
-			model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
+			model.addAttribute("bookDetailsInfo", bookInfo);
 			return "editBook";
 		}
 	}

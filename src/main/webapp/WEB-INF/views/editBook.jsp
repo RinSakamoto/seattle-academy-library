@@ -108,7 +108,7 @@
                 </div>
             </div>
             <div class="edtDelBookBtn_box">
-                <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_addBook">更新</button>
+                <button type="submit" name="bookId" class="btn_addBook">更新</button>
             </div>
         </form>
     </main>
