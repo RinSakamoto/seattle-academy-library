@@ -31,6 +31,13 @@ public class BulkregistController {
 
 	@Autowired
 	private BooksService booksService;
+	
+	/**
+	* 一括登録画面に遷移する
+	*
+	* @param model モデル
+	* @return 遷移先画面
+	*/
 
 	@RequestMapping(value = "/bulkregist", method = RequestMethod.GET) // value＝actionで指定したパラメータ
 	// RequestParamでname属性を取得
