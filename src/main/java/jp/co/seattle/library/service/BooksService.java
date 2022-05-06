@@ -103,11 +103,28 @@ public class BooksService {
 
 	public void updateBook(BookDetailsInfo bookInfo) {
 
-		String sql = "UPDATE books SET (title, author,publisher,publish_date,isbn,explanation,thumbnail_name,thumbnail_url,upd_date) = ('"
+		String sql = "UPDATE books SET (title,author,publisher,publish_date,isbn,explanation,thumbnail_name,thumbnail_url,upd_date) = ('"
 				+ bookInfo.getTitle() + "','" + bookInfo.getAuthor() + "','" + bookInfo.getPublisher() + "','"
 				+ bookInfo.getPublishDate() + "','" + bookInfo.getIsbn() + "','" + bookInfo.getExplanation() + "','"
 				+ bookInfo.getThumbnailName() + "','" + bookInfo.getThumbnailUrl() + "'," + "now()) WHERE id = ";
 
 		jdbcTemplate.update(sql);
 	}
+	/**
+	 * 書籍を登録する
+	 *
+	 * @param bookList 書籍情報
+	 */
+	public void bulkregistBook(List<BookDetailsInfo> bookList) {
+		
+		for(BookDetailsInfo bookInfo : bookList){
+
+		String sql = "INSERT INTO books (title, author,publisher,publish_date,isbn,explanation,thumbnail_url,reg_date,upd_date) VALUES ('"
+				+ bookInfo.getTitle() + "','" + bookInfo.getAuthor() + "','" + bookInfo.getPublisher() + "','"
+				+ bookInfo.getPublishDate() + "','" + bookInfo.getIsbn() + "','" + bookInfo.getExplanation() + "','"
+				+ bookInfo.getThumbnailUrl() + "'," + "now()," + "now())";
+
+		jdbcTemplate.update(sql);
+	}
+}
 }
